@@ -22,10 +22,19 @@ header {
     z-index: 10;
 }
 header h1 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-family: cursive, sans-serif;
     margin: 0;
     font-size: 1.5rem;
 }
+
+.logo {
+    width: 32px;
+    height: 32px;
+}  
+
 nav ul {
     list-style: none;
     display: flex;
