@@ -1,6 +1,6 @@
 const container = document.querySelector(".image-container");
 
-for (let i = 0; i < 20; i++) {
+for (let i = 0; i < 50; i++) {
     const frame = document.createElement("div");
     frame.classList.add("image-frame");
 
