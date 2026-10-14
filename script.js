@@ -1,4 +1,5 @@
 const container = document.querySelector(".image-container");
+const containerLikes = document.querySelector(".likes-container");
 const STORAGE_KEY = "meGusta";
 
 // Lee los likes guardados en localStorage
@@ -47,24 +48,26 @@ for (const randomId of uniqueIds) {
     }
 
     likeBtn.addEventListener("click", () => {
-        const currentLikes = getLikes();
+        let currentLikes = getLikes();
         if (currentLikes.includes(img.src)) {
-            // Quitar el like
-            saveLikes(currentLikes.filter((src) => src !== img.src));
-            likeBtn.classList.remove("liked");
+            // Quitar de favoritos
+            currentLikes = currentLikes.filter((src) => src !== img.src);
         } else {
-            // Agregar el like
+            // Agregar a favoritos
             currentLikes.push(img.src);
-            saveLikes(currentLikes);
-            likeBtn.classList.add("liked");
         }
+
+        saveLikes(currentLikes);
+
+        likeBtn.classList.toggle("liked", currentLikes.includes(img.src));
+
+        renderLikedImages();
     });
 
     frame.appendChild(likeBtn);
     container.appendChild(frame);
 }
 
-const containerLikes = document.querySelector(".likes-container");
 const misMeGusta = getLikes();
 
 if (misMeGusta.length === 0) {
@@ -126,3 +129,59 @@ meGustaBtn.addEventListener("click", () => {
     containerLikes.style.display = "flex";
     renderLikedImages();
 });
+
+function renderLikedImages() {
+    const containerLikes = document.querySelector(".likes-container");
+    containerLikes.innerHTML = "";
+
+    const likes = getLikes();
+
+    if (likes.length === 0) {
+        containerLikes.textContent = "Todavía no tienes imágenes favoritas.";
+        return;
+    }
+
+    likes.forEach((src) => {
+        const frame = document.createElement("div");
+        frame.classList.add("image-frame");
+
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = "Imagen favorita";
+        frame.appendChild(img);
+
+        // Botón con confirmación inline de 2 segundos
+        const btn = document.createElement("button");
+        btn.classList.add("like-btn", "liked");
+        btn.innerHTML = `<img src="icons/like.svg" alt="Me gusta" />`;
+
+        let timer = null;
+
+        btn.addEventListener("click", () => {
+            if (timer) {
+                // Segundo clic: confirmar y quitar el like
+                clearTimeout(timer);
+                timer = null;
+
+                // Filtramos el localStorage y actualizamos la vista
+                const updatedLikes = getLikes().filter((s) => s !== src);
+                saveLikes(updatedLikes);
+
+                renderLikedImages();
+            } else {
+                // Primer clic: mostrar confirmación
+                btn.textContent = "¿Quitar?";
+                btn.classList.add("confirming");
+
+                timer = setTimeout(() => {
+                    btn.innerHTML = `<img src="icons/like.svg" alt="Me gusta" />`;
+                    btn.classList.remove("confirming");
+                    timer = null;
+                }, 2000);
+            }
+        });
+
+        frame.appendChild(btn);
+        containerLikes.appendChild(frame);
+    });
+}
