@@ -21,10 +21,16 @@ for (let i = 0; i < 50; i++) {
     frame.classList.add("image-frame");
 
     const img = document.createElement("img");
+    img.alt = "";
+
+    // Si la imagen no carga, no mostrarla
+    img.addEventListener("error", () => {
+        frame.remove();
+    });
 
     const randomId = Math.floor(Math.random() * 1000);
+
     img.src = `https://picsum.photos/id/${randomId}/200/300`;
-    img.alt = `Imagen aleatoria ${i + 1}`;
 
     frame.appendChild(img);
 
@@ -54,3 +60,24 @@ for (let i = 0; i < 50; i++) {
     frame.appendChild(likeBtn);
     container.appendChild(frame);
 }
+
+const containerLikes = document.querySelector(".likes-container");
+const misMeGusta = JSON.parse(localStorage.getItem("meGusta")) || [];
+
+if (misMeGusta.length === 0) {
+    const msg = document.createElement("p");
+    msg.textContent = "Todavía no has dado me gusta a ninguna imagen.";
+    containerLikes.appendChild(msg);
+}
+
+misMeGusta.forEach((src) => {
+    const frame = document.createElement("div");
+    frame.classList.add("image-frame");
+
+    const img = document.createElement("img");
+    img.src = src;
+    img.alt = "Imagen que te gusta";
+
+    frame.appendChild(img);
+    containerLikes.appendChild(frame);
+});
