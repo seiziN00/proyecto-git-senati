@@ -62,7 +62,7 @@ for (let i = 0; i < 50; i++) {
 }
 
 const containerLikes = document.querySelector(".likes-container");
-const misMeGusta = JSON.parse(localStorage.getItem("meGusta")) || [];
+const misMeGusta = getLikes();
 
 if (misMeGusta.length === 0) {
     const msg = document.createElement("p");
@@ -77,7 +77,34 @@ misMeGusta.forEach((src) => {
     const img = document.createElement("img");
     img.src = src;
     img.alt = "Imagen que te gusta";
-
     frame.appendChild(img);
+
+    // Botón con confirmación inline de 2 segundos
+    const btn = document.createElement("button");
+    btn.classList.add("like-btn");
+    btn.innerHTML = `<img src="icons/like.svg" alt="Me gusta" />`;
+
+    let timer = null;
+
+    btn.addEventListener("click", () => {
+        if (timer) {
+            // Segundo click: confirmar y quitar el like
+            clearTimeout(timer);
+            timer = null;
+            saveLikes(getLikes().filter((s) => s !== src));
+            frame.remove();
+        } else {
+            // Primer click: mostrar confirmación
+            btn.textContent = "¿Quitar?";
+            btn.classList.add("confirming");
+            timer = setTimeout(() => {
+                btn.innerHTML = `<img src="icons/like.svg" alt="Me gusta" />`;
+                btn.classList.remove("confirming");
+                timer = null;
+            }, 2000);
+        }
+    });
+
+    frame.appendChild(btn);
     containerLikes.appendChild(frame);
 });

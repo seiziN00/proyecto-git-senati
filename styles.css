@@ -58,6 +58,20 @@ footer {
     flex-direction: column;
 }
 
+@keyframes insert-frame {
+    from {
+        opacity: 0;
+        transform: scale(0.5) translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+.image-frame.inserting {
+    animation: insert-frame 0.35s ease-out;
+}
+
 .nav-icon {
     width: 24px;
     height: 24px;
@@ -79,4 +93,14 @@ footer {
 /* Corazón activo (le cambiamos el color al svg vía filter) */
 .like-btn.liked img {
     filter: invert(27%) sepia(85%) saturate(5000%) hue-rotate(330deg);
+}
+
+/* confirmacion del delete in line */
+.like-btn.confirming {
+    background: #ed4956;
+    color: #fff;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
 }
