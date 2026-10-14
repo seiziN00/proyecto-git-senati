@@ -16,7 +16,12 @@ function saveLikes(likes) {
 
 const likes = getLikes();
 
-for (let i = 0; i < 50; i++) {
+const uniqueIds = new Set();
+while (uniqueIds.size < 50) {
+    uniqueIds.add(Math.floor(Math.random() * 1000));
+}
+
+for (const randomId of uniqueIds) {
     const frame = document.createElement("div");
     frame.classList.add("image-frame");
 
@@ -27,8 +32,6 @@ for (let i = 0; i < 50; i++) {
     img.addEventListener("error", () => {
         frame.remove();
     });
-
-    const randomId = Math.floor(Math.random() * 1000);
 
     img.src = `https://picsum.photos/id/${randomId}/200/300`;
 
