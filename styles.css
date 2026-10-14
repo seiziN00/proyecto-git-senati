@@ -8,6 +8,9 @@ body {
     font-family: "Segoe UI", Arial, sans-serif;
     background-color: #fafafa;
     color: #262626;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 header {
@@ -33,7 +36,7 @@ header h1 {
 .logo {
     width: 32px;
     height: 32px;
-}  
+}
 
 nav ul {
     list-style: none;
@@ -58,6 +61,7 @@ footer {
     border-top: 1px solid #dbdbdb;
     background-color: #ffffff;
     margin-top: 40px;
+    margin-top: auto;
 }
 
 .image-frame {
