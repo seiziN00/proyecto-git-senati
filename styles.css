@@ -39,6 +39,7 @@ nav li {
 .image-container {
     margin: 30px auto;
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 20px;
 }
