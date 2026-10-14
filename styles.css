@@ -32,9 +32,6 @@ nav ul {
     gap: 20px;
     font-weight: 600;
 }
-nav li {
-    cursor: pointer;
-}
 
 .image-container {
     margin: 30px auto;
@@ -74,8 +71,8 @@ footer {
 }
 
 .nav-icon {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
 }
 
 .like-btn {
@@ -104,4 +101,41 @@ footer {
     padding: 5px 12px;
     font-size: 0.85rem;
     font-weight: 600;
+}
+
+/* Botones del nav */
+#inicio-button,
+#me-gusta-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: filter 0.3s ease;
+}
+
+@keyframes pulso-inicio {
+    0%,
+    100% {
+        filter: sepia(1) hue-rotate(170deg) saturate(500%) brightness(0.5);
+    }
+    50% {
+        filter: sepia(1) hue-rotate(170deg) saturate(200%) brightness(0.8);
+    }
+}
+
+@keyframes pulso-megusta {
+    0%,
+    100% {
+        filter: sepia(1) hue-rotate(250deg) saturate(800%) brightness(0.5);
+    }
+    50% {
+        filter: sepia(1) hue-rotate(250deg) saturate(300%) brightness(0.8);
+    }
+}
+
+#inicio-button:hover {
+    animation: pulso-inicio 1.5s ease-in-out infinite;
+}
+
+#me-gusta-button:hover {
+    animation: pulso-megusta 1.5s ease-in-out infinite;
 }
