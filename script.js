@@ -108,3 +108,18 @@ misMeGusta.forEach((src) => {
     frame.appendChild(btn);
     containerLikes.appendChild(frame);
 });
+
+/* ========= Switcher de nav-contenido ========= */
+const inicioBtn = document.getElementById("inicio-button");
+const meGustaBtn = document.getElementById("me-gusta-button");
+
+inicioBtn.addEventListener("click", () => {
+    container.style.display = "flex";
+    containerLikes.style.display = "none";
+});
+
+meGustaBtn.addEventListener("click", () => {
+    container.style.display = "none";
+    containerLikes.style.display = "flex";
+    renderLikedImages();
+});
