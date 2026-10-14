@@ -118,15 +118,18 @@ misMeGusta.forEach((src) => {
 /* ========= Switcher de nav-contenido ========= */
 const inicioBtn = document.getElementById("inicio-button");
 const meGustaBtn = document.getElementById("me-gusta-button");
+const navTitle = document.getElementById("nav-title");
 
 inicioBtn.addEventListener("click", () => {
     container.style.display = "flex";
     containerLikes.style.display = "none";
+    navTitle.textContent = "Inicio";
 });
 
 meGustaBtn.addEventListener("click", () => {
     container.style.display = "none";
     containerLikes.style.display = "flex";
+    navTitle.textContent = "Mis Me Gusta";
     renderLikedImages();
 });
 

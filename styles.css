@@ -152,3 +152,9 @@ footer {
 #me-gusta-button:hover {
     animation: pulso-megusta 1.5s ease-in-out infinite;
 }
+
+@media (width < 768px) {
+    #nav-title {
+        display: none;
+    }
+}
