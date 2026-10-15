@@ -114,11 +114,13 @@ footer {
     padding: 5px 12px;
     font-size: 0.85rem;
     font-weight: 600;
+    margin-top: 0.5rem;
 }
 
 /* Botones del nav */
 #inicio-button,
-#me-gusta-button {
+#me-gusta-button,
+#theme-toggle {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -153,6 +155,28 @@ footer {
     animation: pulso-megusta 1.5s ease-in-out infinite;
 }
 
+/* DARK / LIGHT THEMES */
+body.dark {
+    background-color: #1a1a1a;
+    color: #e6e6e6;
+}
+
+body.dark.header {
+    background-color: #262626;
+    border-bottom: 1px solid #404040;
+}
+
+body.dark.footer {
+    background-color: #262626;
+    color: #a6a6a6;
+    border-top: 1px solid #404040;
+}
+
+body.dark #theme-toggle img {
+    filter: invert(1);
+}
+
+/* RESPONSIVE */
 @media (width < 768px) {
     #nav-title {
         display: none;
