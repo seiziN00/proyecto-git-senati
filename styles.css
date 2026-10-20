@@ -159,21 +159,21 @@ footer {
 body.dark {
     background-color: #1a1a1a;
     color: #e6e6e6;
-}
 
-body.dark.header {
-    background-color: #262626;
-    border-bottom: 1px solid #404040;
-}
+    > header {
+        background-color: #262626;
+        border-bottom: 1px solid #404040;
+    }
 
-body.dark.footer {
-    background-color: #262626;
-    color: #a6a6a6;
-    border-top: 1px solid #404040;
-}
+    > footer {
+        background-color: #262626;
+        color: #a6a6a6;
+        border-top: 1px solid #404040;
+    }
 
-body.dark #theme-toggle img {
-    filter: invert(1);
+    > #theme-toggle img {
+        filter: invert(1);
+    }
 }
 
 /* RESPONSIVE */
