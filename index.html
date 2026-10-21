@@ -7,25 +7,36 @@
             name="description"
             content="KrakenGram - Galería de imágenes y favoritos"
         />
+
         <link rel="stylesheet" href="styles.css" />
+
         <title>KrakenGram</title>
     </head>
+
     <body>
+        
         <header class="site-header">
             <div class="header-content">
+                <!-- Logo -->
                 <button
-                    class="brand"
                     id="brand-button"
+                    class="brand"
                     type="button"
                     aria-label="Ir al inicio"
                 >
-                    <img src="img/logo.png" alt="" class="logo" />
+                    <img
+                        src="img/logo.png"
+                        alt="Logo de KrakenGram"
+                        class="logo"
+                    />
                     <span>KrakenGram</span>
                 </button>
 
+                
                 <h1 id="nav-title">Inicio</h1>
 
                 <nav aria-label="Navegación principal">
+                    
                     <button
                         id="inicio-button"
                         class="nav-button active"
@@ -36,6 +47,7 @@
                         <img src="icons/inicio.svg" alt="" class="nav-icon" />
                     </button>
 
+                    <!-- Favoritos -->
                     <button
                         id="me-gusta-button"
                         class="nav-button"
@@ -45,12 +57,14 @@
                     >
                         <span class="icon-wrap">
                             <img src="icons/like.svg" alt="" class="nav-icon" />
-                            <span id="likes-count" class="likes-count" hidden
-                                >0</span
-                            >
+
+                            <span id="likes-count" class="likes-count" hidden>
+                                0
+                            </span>
                         </span>
                     </button>
 
+                    <!-- Tema -->
                     <button
                         id="theme-toggle"
                         class="nav-button"
@@ -64,28 +78,29 @@
             </div>
         </header>
 
+
         <main class="page">
+            <!-- INICIO -->
             <section id="home-view" class="view">
                 <div class="section-heading">
-                    <div>
-                        <p class="eyebrow">GALERÍA</p>
-                        <h2>Explora KrakenGram</h2>
-                        <p>Descubre imágenes y guarda tus favoritas.</p>
-                    </div>
+                    <p class="eyebrow">GALERÍA</p>
+
+                    <h2>Explora KrakenGram</h2>
+
+                    <p>Descubre imágenes y guarda tus favoritas.</p>
                 </div>
 
                 <div class="image-container" aria-live="polite"></div>
             </section>
 
+            <!-- FAVORITOS -->
             <section id="likes-view" class="view" hidden>
                 <div class="section-heading">
-                    <div>
-                        <p class="eyebrow">COLECCIÓN</p>
-                        <h2>Mis Me Gusta</h2>
-                        <p>
-                            Aquí encontrarás todas las imágenes que guardaste.
-                        </p>
-                    </div>
+                    <p class="eyebrow">COLECCIÓN</p>
+
+                    <h2>Mis Me Gusta</h2>
+
+                    <p>Aquí encontrarás todas las imágenes que guardaste.</p>
                 </div>
 
                 <div
@@ -98,6 +113,19 @@
         <footer>
             <p>KrakenGram · Proyecto académico</p>
         </footer>
+
+        <div id="image-modal" class="image-modal" aria-hidden="true">
+            <button
+                id="modal-close"
+                class="modal-close"
+                type="button"
+                aria-label="Cerrar imagen"
+            >
+                &times;
+            </button>
+
+            <img id="modal-image" src="" alt="Imagen ampliada" />
+        </div>
 
         <script src="script.js"></script>
     </body>
