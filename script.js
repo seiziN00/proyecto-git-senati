@@ -1,8 +1,20 @@
-const container = document.querySelector(".image-container");
-const containerLikes = document.querySelector(".likes-container");
-const STORAGE_KEY = "meGusta";
+const homeContainer = document.querySelector("#home-view .image-container");
+const likesContainer = document.querySelector(".likes-container");
+const homeView = document.getElementById("home-view");
+const likesView = document.getElementById("likes-view");
 
-// Lee los likes guardados en localStorage
+const inicioBtn = document.getElementById("inicio-button");
+const meGustaBtn = document.getElementById("me-gusta-button");
+const brandBtn = document.getElementById("brand-button");
+const themeBtn = document.getElementById("theme-toggle");
+const themeIcon = themeBtn.querySelector("img");
+const navTitle = document.getElementById("nav-title");
+const likesCount = document.getElementById("likes-count");
+
+const STORAGE_KEY = "meGusta";
+const THEME_KEY = "temaOscuro";
+const TOTAL_IMAGES = 50;
+
 function getLikes() {
     try {
         return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
@@ -13,198 +25,176 @@ function getLikes() {
 
 function saveLikes(likes) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(likes));
+    updateLikesCount();
 }
 
-const likes = getLikes();
-
-const uniqueIds = new Set();
-while (uniqueIds.size < 50) {
-    uniqueIds.add(Math.floor(Math.random() * 1000));
+function updateLikesCount() {
+    const total = getLikes().length;
+    likesCount.textContent = total;
+    likesCount.hidden = total === 0;
 }
 
-for (const randomId of uniqueIds) {
-    const frame = document.createElement("div");
-    frame.classList.add("image-frame");
-
-    const img = document.createElement("img");
-    img.alt = "";
-
-    // Si la imagen no carga, no mostrarla
-    img.addEventListener("error", () => {
-        frame.remove();
-    });
-
-    img.src = `https://picsum.photos/id/${randomId}/200/300`;
-
-    frame.appendChild(img);
-
-    // Botón de "me gusta"
-    const likeBtn = document.createElement("button");
-    likeBtn.classList.add("like-btn");
-    likeBtn.innerHTML = `<img src="icons/like.svg" alt="Me gusta" />`;
-    // Si la imagen ya estaba likeada, se muestra activa
-    if (likes.includes(img.src)) {
-        likeBtn.classList.add("liked");
-    }
-
-    likeBtn.addEventListener("click", () => {
-        let currentLikes = getLikes();
-        if (currentLikes.includes(img.src)) {
-            // Quitar de favoritos
-            currentLikes = currentLikes.filter((src) => src !== img.src);
-        } else {
-            // Agregar a favoritos
-            currentLikes.push(img.src);
-        }
-
-        saveLikes(currentLikes);
-
-        likeBtn.classList.toggle("liked", currentLikes.includes(img.src));
-
-        renderLikedImages();
-    });
-
-    frame.appendChild(likeBtn);
-    container.appendChild(frame);
-}
-
-const misMeGusta = getLikes();
-
-if (misMeGusta.length === 0) {
-    const msg = document.createElement("p");
-    msg.textContent = "Todavía no has dado me gusta a ninguna imagen.";
-    containerLikes.appendChild(msg);
-}
-
-misMeGusta.forEach((src) => {
-    const frame = document.createElement("div");
-    frame.classList.add("image-frame");
+function createImageCard(src, isFavoritesView = false) {
+    const frame = document.createElement("article");
+    frame.className = "image-frame";
 
     const img = document.createElement("img");
     img.src = src;
-    img.alt = "Imagen que te gusta";
-    frame.appendChild(img);
+    img.alt = isFavoritesView
+        ? "Imagen favorita de KrakenGram"
+        : "Imagen de KrakenGram";
+    img.loading = "lazy";
 
-    // Botón con confirmación inline de 2 segundos
-    const btn = document.createElement("button");
-    btn.classList.add("like-btn");
-    btn.innerHTML = `<img src="icons/like.svg" alt="Me gusta" />`;
+    img.addEventListener("error", () => frame.remove());
 
-    let timer = null;
+    const likeBtn = document.createElement("button");
+    likeBtn.type = "button";
+    likeBtn.className = "like-btn";
+    likeBtn.setAttribute("aria-label", "Marcar como favorita");
 
-    btn.addEventListener("click", () => {
-        if (timer) {
-            // Segundo click: confirmar y quitar el like
-            clearTimeout(timer);
-            timer = null;
-            saveLikes(getLikes().filter((s) => s !== src));
-            frame.remove();
-        } else {
-            // Primer click: mostrar confirmación
-            btn.textContent = "¿Quitar?";
-            btn.classList.add("confirming");
-            timer = setTimeout(() => {
-                btn.innerHTML = `<img src="icons/like.svg" alt="Me gusta" />`;
-                btn.classList.remove("confirming");
-                timer = null;
+    const isLiked = getLikes().includes(src);
+    if (isLiked) {
+        likeBtn.classList.add("liked");
+        likeBtn.setAttribute("aria-label", "Quitar de favoritos");
+    }
+
+    likeBtn.innerHTML = `<img src="${isLiked ? "icons/like-red.svg" : "icons/like.svg"}" alt="" />`;
+
+    let confirmationTimer = null;
+
+    likeBtn.addEventListener("click", () => {
+        const currentLikes = getLikes();
+        const alreadyLiked = currentLikes.includes(src);
+
+        if (isFavoritesView && alreadyLiked) {
+            if (confirmationTimer) {
+                clearTimeout(confirmationTimer);
+                saveLikes(currentLikes.filter((item) => item !== src));
+                renderLikedImages();
+                syncHomeLikes();
+                return;
+            }
+
+            likeBtn.textContent = "¿Quitar?";
+            likeBtn.classList.add("confirming");
+
+            confirmationTimer = setTimeout(() => {
+                confirmationTimer = null;
+                likeBtn.classList.remove("confirming");
+                likeBtn.innerHTML = `<img src="icons/like-red.svg" alt="" />`;
             }, 2000);
+
+            return;
         }
+
+        const updatedLikes = alreadyLiked
+            ? currentLikes.filter((item) => item !== src)
+            : [...currentLikes, src];
+
+        saveLikes(updatedLikes);
+        syncHomeLikes();
     });
 
-    frame.appendChild(btn);
-    containerLikes.appendChild(frame);
-});
+    frame.append(img, likeBtn);
+    return frame;
+}
 
-/* ========= Switcher de nav-contenido ========= */
-const inicioBtn = document.getElementById("inicio-button");
-const meGustaBtn = document.getElementById("me-gusta-button");
-const navTitle = document.getElementById("nav-title");
+function renderHomeImages() {
+    const uniqueIds = new Set();
 
-inicioBtn.addEventListener("click", () => {
-    container.style.display = "flex";
-    containerLikes.style.display = "none";
-    navTitle.textContent = "Inicio";
-});
+    while (uniqueIds.size < TOTAL_IMAGES) {
+        uniqueIds.add(Math.floor(Math.random() * 1000));
+    }
 
-meGustaBtn.addEventListener("click", () => {
-    container.style.display = "none";
-    containerLikes.style.display = "flex";
-    navTitle.textContent = "Mis Me Gusta";
-    renderLikedImages();
-});
+    const fragment = document.createDocumentFragment();
+
+    uniqueIds.forEach((id) => {
+        const src = `https://picsum.photos/id/${id}/400/600`;
+        fragment.appendChild(createImageCard(src));
+    });
+
+    homeContainer.appendChild(fragment);
+}
 
 function renderLikedImages() {
-    const containerLikes = document.querySelector(".likes-container");
-    containerLikes.innerHTML = "";
-
+    likesContainer.innerHTML = "";
     const likes = getLikes();
 
     if (likes.length === 0) {
-        containerLikes.textContent = "Todavía no tienes imágenes favoritas.";
+        const emptyState = document.createElement("div");
+        emptyState.className = "empty-state";
+        emptyState.innerHTML = `
+            <div>
+                <strong>Aún no tienes favoritos.</strong>
+                <p>Vuelve a Inicio y pulsa el corazón de las imágenes que te gusten.</p>
+            </div>
+        `;
+        likesContainer.appendChild(emptyState);
         return;
     }
 
+    const fragment = document.createDocumentFragment();
+
     likes.forEach((src) => {
-        const frame = document.createElement("div");
-        frame.classList.add("image-frame");
+        fragment.appendChild(createImageCard(src, true));
+    });
 
-        const img = document.createElement("img");
-        img.src = src;
-        img.alt = "Imagen favorita";
-        frame.appendChild(img);
+    likesContainer.appendChild(fragment);
+}
 
-        // Botón con confirmación inline de 2 segundos
-        const btn = document.createElement("button");
-        btn.classList.add("like-btn", "liked");
-        btn.innerHTML = `<img src="icons/like.svg" alt="Me gusta" />`;
+function syncHomeLikes() {
+    homeContainer.querySelectorAll(".image-frame").forEach((frame) => {
+        const img = frame.querySelector(":scope > img");
+        const btn = frame.querySelector(".like-btn");
+        const icon = btn.querySelector("img");
+        const liked = getLikes().includes(img.src);
 
-        let timer = null;
+        btn.classList.toggle("liked", liked);
+        btn.setAttribute(
+            "aria-label",
+            liked ? "Quitar de favoritos" : "Marcar como favorita",
+        );
 
-        btn.addEventListener("click", () => {
-            if (timer) {
-                // Segundo clic: confirmar y quitar el like
-                clearTimeout(timer);
-                timer = null;
-
-                // Filtramos el localStorage y actualizamos la vista
-                const updatedLikes = getLikes().filter((s) => s !== src);
-                saveLikes(updatedLikes);
-
-                renderLikedImages();
-            } else {
-                // Primer clic: mostrar confirmación
-                btn.textContent = "¿Quitar?";
-                btn.classList.add("confirming");
-
-                timer = setTimeout(() => {
-                    btn.innerHTML = `<img src="icons/like.svg" alt="Me gusta" />`;
-                    btn.classList.remove("confirming");
-                    timer = null;
-                }, 2000);
-            }
-        });
-
-        frame.appendChild(btn);
-        containerLikes.appendChild(frame);
+        if (icon) {
+            icon.src = liked ? "icons/like-red.svg" : "icons/like.svg";
+        }
     });
 }
 
-/* CAMBIAR MODO CLARO-OSCURO */
-const tipoModo = document.getElementById("theme-toggle");
-const THEME_KEY = "temaOscuro";
+function showView(view) {
+    const showHome = view === "home";
 
-function aplicarTema(dark) {
-    document.body.classList.toggle("dark", dark);
-    localStorage.setItem(THEME_KEY, dark ? "1" : "0");
+    homeView.hidden = !showHome;
+    likesView.hidden = showHome;
+
+    inicioBtn.classList.toggle("active", showHome);
+    meGustaBtn.classList.toggle("active", !showHome);
+    navTitle.textContent = showHome ? "Inicio" : "Mis Me Gusta";
+
+    if (!showHome) {
+        renderLikedImages();
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-const savedPreference = localStorage.getItem(THEME_KEY);
-aplicarTema(
-    savedPreference !== null
-        ? savedPreference == "1"
-        : window.matchMedia("(prefers-color-scheme: dark)").matches,
-);
+function applyTheme(isDark) {
+    document.body.classList.toggle("dark", isDark);
+    localStorage.setItem(THEME_KEY, isDark ? "1" : "0");
+    themeIcon.src = isDark ? "icons/dark.svg" : "icons/light.svg";
+}
 
-tipoModo.addEventListener("click", () => {
-    aplicarTema(!document.body.classList.contains("dark"));
+inicioBtn.addEventListener("click", () => showView("home"));
+brandBtn.addEventListener("click", () => showView("home"));
+meGustaBtn.addEventListener("click", () => showView("likes"));
+
+themeBtn.addEventListener("click", () => {
+    applyTheme(!document.body.classList.contains("dark"));
 });
+
+const savedTheme = localStorage.getItem(THEME_KEY);
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+applyTheme(savedTheme !== null ? savedTheme === "1" : prefersDark);
+renderHomeImages();
+updateLikesCount();

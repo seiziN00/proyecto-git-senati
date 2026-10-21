@@ -3,61 +3,102 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="KrakenGram - Galería de imágenes y favoritos"
+        />
         <link rel="stylesheet" href="styles.css" />
         <title>KrakenGram</title>
-        <base target="_blank" />
     </head>
     <body>
-        <header>
-            <h1>
-                <img src="img/logo.png" alt="Logo de KrakenGram" class="logo" />
-                KrakenGram
-            </h1>
-            <h2 id="nav-title">Inicio</h2>
-            <nav>
-                <ul>
-                    <li>
-                        <button id="inicio-button" type="button">
-                            <img
-                                src="icons/inicio.svg"
-                                alt="Inicio"
-                                class="nav-icon"
-                            />
-                        </button>
-                    </li>
-                    <li>
-                        <button id="me-gusta-button" type="button">
-                            <img
-                                src="icons/like.svg"
-                                alt="Me Gusta"
-                                class="nav-icon"
-                            />
-                        </button>
-                    </li>
-                    <li>
-                        <button
-                            id="theme-toggle"
-                            class="theme-switch"
-                            type="button"
-                        >
-                            <img
-                                src="icons/light.svg"
-                                alt="alternar modo claro/oscuro"
-                                class="nav-icon"
-                            />
-                        </button>
-                    </li>
-                </ul>
-            </nav>
+        <header class="site-header">
+            <div class="header-content">
+                <button
+                    class="brand"
+                    id="brand-button"
+                    type="button"
+                    aria-label="Ir al inicio"
+                >
+                    <img src="img/logo.png" alt="" class="logo" />
+                    <span>KrakenGram</span>
+                </button>
+
+                <h1 id="nav-title">Inicio</h1>
+
+                <nav aria-label="Navegación principal">
+                    <button
+                        id="inicio-button"
+                        class="nav-button active"
+                        type="button"
+                        aria-label="Inicio"
+                        title="Inicio"
+                    >
+                        <img src="icons/inicio.svg" alt="" class="nav-icon" />
+                    </button>
+
+                    <button
+                        id="me-gusta-button"
+                        class="nav-button"
+                        type="button"
+                        aria-label="Mis favoritos"
+                        title="Mis favoritos"
+                    >
+                        <span class="icon-wrap">
+                            <img src="icons/like.svg" alt="" class="nav-icon" />
+                            <span id="likes-count" class="likes-count" hidden
+                                >0</span
+                            >
+                        </span>
+                    </button>
+
+                    <button
+                        id="theme-toggle"
+                        class="nav-button"
+                        type="button"
+                        aria-label="Cambiar tema"
+                        title="Cambiar tema"
+                    >
+                        <img src="icons/light.svg" alt="" class="nav-icon" />
+                    </button>
+                </nav>
+            </div>
         </header>
 
-        <main class="image-container"></main>
+        <main class="page">
+            <section id="home-view" class="view">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">GALERÍA</p>
+                        <h2>Explora KrakenGram</h2>
+                        <p>Descubre imágenes y guarda tus favoritas.</p>
+                    </div>
+                </div>
 
-        <section class="image-container likes-container" style="display: none">
-            <h1>Mis Me Gusta</h1>
-        </section>
+                <div class="image-container" aria-live="polite"></div>
+            </section>
 
-        <footer>KrakenGram - Todos los derechos no están reservados.</footer>
+            <section id="likes-view" class="view" hidden>
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">COLECCIÓN</p>
+                        <h2>Mis Me Gusta</h2>
+                        <p>
+                            Aquí encontrarás todas las imágenes que guardaste.
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="image-container likes-container"
+                    aria-live="polite"
+                ></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>KrakenGram · Proyecto académico</p>
+        </footer>
+
         <script src="script.js"></script>
     </body>
 </html>
